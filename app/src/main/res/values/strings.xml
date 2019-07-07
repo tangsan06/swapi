@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">swapi</string>
+    <string name="pesquisar">pesquisar</string>
+    <string name="digite_o_id">Digite o id</string>
 </resources>
