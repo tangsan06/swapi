@@ -1,12 +1,14 @@
 package com.example.swapi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.swapi.model.PessoaModel;
@@ -30,12 +32,19 @@ public class MainActivity extends AppCompatActivity {
     private int quantidade;
     private Retrofit retrofit;
     private RecyclerView recyclerView;
-    private static List<PessoaModel> lstPessoa = new ArrayList<>();
+    private List<PessoaModel> lstPessoa;
+    private PeopleAdapter peopleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        recyclerView = (RecyclerView) findViewById(R.id.lstDados);
+        lstPessoa = new ArrayList<>();
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
         listarPessoa();
     }
 
@@ -57,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             Call<PessoaModel> call = service.getPessoa(i);
 
             String name = "";
-            System.out.println("aqui foi");
             call.enqueue(new Callback<PessoaModel>() {
                 @Override
                 public void onResponse(Call<PessoaModel> call, Response<PessoaModel> response) {
@@ -66,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         adicionarPessoa(oPessoa);
 
                         if(value == quantidade){
-                            printLista();
+                            criarLayout();
                         }
                     }
                 }
@@ -83,10 +91,10 @@ public class MainActivity extends AppCompatActivity {
         this.lstPessoa.add(pessoa);
     }
 
-    public void printLista(){
-        for(PessoaModel oPessoa: this.lstPessoa){
-            System.out.println("Name: " + oPessoa.getName() + " -- " + oPessoa.getHeight() + " -- " + oPessoa.getBirth());
-        }
+    public void criarLayout(){
+        System.out.println(this.lstPessoa.size());
+        peopleAdapter = new PeopleAdapter(this.lstPessoa);
+        recyclerView.setAdapter(peopleAdapter);
     }
 
 }
